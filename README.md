@@ -81,6 +81,10 @@ ip route add default via <GATEWAY_IP> dev eth0
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
 ```
 
+### Tampilan tabel VLSM
+
+![Grafik VLSM](Assets/Grafik_VLSM.png)
+
 ### VLSM Subnet Allocation Table
 
 | Subnet | Network | Netmask | Range | Usage |
@@ -113,47 +117,266 @@ echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
 ## CIDR Configuration (Cisco Packet Tracer)
 
-### Struktur Penggabungan CIDR
+### Struktur Subnet CIDR
+Berdasarkan file `CIDR.csv`, subnet diagregasi secara hierarkis menggunakan metode bottom-up untuk route summarization.
 
-CIDR menggunakan pendekatan bottom-up dengan penggabungan subnet berlevel.
+### Router Configuration Pattern
 
-#### Level I (B):
-- B1 = A4 + A11 → 10.76.0.0/22
-- B2 = A7 + A8 → 10.76.5.0/24
-- B3 = A2 + A3 → 10.76.14.0/24
-- B4 = A10 + A9 → 10.76.8.0/22
-- B5 = A18 + A14 → 10.76.4.0/22
-- B6 = A16 + A17 → 10.76.15.0/25
-- B7 = A21 + A20 → 10.76.12.0/23
-- B8 = A22 + A23 → 10.76.15.128/26
+#### 1. **Amansul** (Router Pusat)
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Eregion (10.76.15.193/30)
+! FastEthernet0/1: to Minastir (10.76.15.213/30)
+! FastEthernet1/0: to Fornost (10.76.15.229/30)
 
-#### Level II (C):
-- C1 = B4 + A6 → 10.76.8.0/22
-- C2 = B1 + B2 → 10.76.0.0/22
-- C3 = B6 + A15 → 10.76.15.0/25
-
-#### Level III (D):
-- D1 = C1 + C2 → 10.76.0.0/21
-
-#### Level IV (E):
-- E1 = B3 + D1 → 10.76.0.0/20
-- E2 = B5 + C3 → 10.76.4.0/22
-- E3 = B7 + B8 → 10.76.12.0/23
-
-#### Level V (F):
-- F1 = E1 + E2 → 10.76.0.0/20
-
-#### Level VI (G):
-- G1 = E3 + F1 → 10.76.0.0/20 (Final aggregation)
-
-### Router Configuration for CIDR
-
-Konfigurasi CIDR menggunakan agregasi routing untuk meminimalkan ukuran routing table.
-
-```bash
-# Contoh konfigurasi Amansul - CIDR
-ip route add 10.76.0.0/20 via <next_hop>  # Aggregate all networks
+! Static Routes (Aggregated):
+ip route 10.76.0.0 255.255.240.0 10.76.15.194    ! To Eregion side
+ip route 10.76.4.0 255.255.252.0 10.76.15.214    ! To Minastir side
+ip route 10.76.12.0 255.255.254.0 10.76.15.214   ! To Minastir side
+ip route 10.76.8.0 255.255.252.0 10.76.15.230    ! To Fornost side
 ```
+
+#### 2. **Eregion**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Amansul (10.76.15.194/30)
+! FastEthernet0/1: to Numenor (10.76.15.225/30)
+! FastEthernet1/0: to Switch8/Mirkwood (10.76.0.1/25)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.193               ! Default to Amansul
+ip route 10.76.14.0 255.255.255.0 10.76.15.226      ! To Numenor side
+ip route 10.76.15.0 255.255.255.128 10.76.15.226    ! To Numenor side
+```
+
+#### 3. **Numenor**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Eregion (10.76.15.226/30)
+! FastEthernet0/1: to Gudur (10.76.15.177/29)
+! FastEthernet1/0: to Switch7/Palantir (10.76.15.65/26)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.225               ! Default to Eregion
+ip route 10.76.14.0 255.255.255.0 10.76.15.178      ! To Gudur side
+ip route 10.76.15.0 255.255.255.192 10.76.15.178    ! To Gudur side
+```
+
+#### 4. **Gudur**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Numenor (10.76.15.178/29)
+! FastEthernet0/1: to Switch6/IronCrown (10.76.15.1/26)
+! FastEthernet1/0: to Mordor (10.76.15.129/26)
+! FastEthernet1/1: to Ereinion (10.76.15.185/29)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.177               ! Default to Numenor
+ip route 10.76.14.0 255.255.255.0 10.76.15.130      ! To Mordor side
+```
+
+#### 5. **Mordor**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Gudur (10.76.15.130/26)
+! FastEthernet0/1: to Erain (10.76.14.1/24)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.129               ! Default to Gudur
+```
+
+#### 6. **Erain**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Mordor (10.76.14.2/24)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.14.1                 ! Default to Mordor
+```
+
+#### 7. **Ereinion**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Gudur (10.76.15.186/29)
+! FastEthernet0/1: to Switch9/Imrahil (10.76.15.161/28)
+! FastEthernet1/0: to Switch10/Doriath (10.76.15.128/27)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.185               ! Default to Gudur
+```
+
+#### 8. **Minastir**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Amansul (10.76.15.214/30)
+! FastEthernet0/1: to Amroth (10.76.15.209/30)
+! FastEthernet1/0: to Anor (10.76.15.205/30)
+! FastEthernet1/1: to Erebor (10.76.5.1/24)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.213               ! Default to Amansul
+ip route 10.76.4.0 255.255.252.0 10.76.15.210       ! To Amroth side
+```
+
+#### 9. **Amroth**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Minastir (10.76.15.210/30)
+! FastEthernet0/1: to Morgoth (10.76.15.201/30)
+! FastEthernet1/0: to Switch2/Erendis (10.76.7.1/26)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.209               ! Default to Minastir
+ip route 10.76.4.0 255.255.254.0 10.76.15.202       ! To Morgoth side
+```
+
+#### 10. **Morgoth**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Amroth (10.76.15.202/30)
+! FastEthernet0/1: to Switch3/Balrog (10.76.4.1/23)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.201               ! Default to Amroth
+```
+
+#### 11. **Anor**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Minastir (10.76.15.206/30)
+! FastEthernet0/1: to Switch4/Melkor (10.76.6.1/23)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.205               ! Default to Minastir
+```
+
+#### 12. **Fornost**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Amansul (10.76.15.230/30)
+! FastEthernet0/1: to Switch5/Arthendain (10.76.8.1/23)
+! FastEthernet1/0: to Valinor (10.76.10.1/23)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.15.229               ! Default to Amansul
+ip route 10.76.12.0 255.255.254.0 10.76.10.2        ! To Valinor side
+```
+
+#### 13. **Valinor**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Fornost (10.76.10.2/23)
+! FastEthernet0/1: to Valmar (10.76.12.1/23)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.10.1                 ! Default to Fornost
+```
+
+#### 14. **Valmar**
+```cisco
+! Interfaces:
+! FastEthernet0/0: to Valinor (10.76.12.2/23)
+! FastEthernet0/1: to Switch11/Anarion (10.76.13.1/24)
+
+! Static Routes:
+ip route 0.0.0.0 0.0.0.0 10.76.12.1                 ! Default to Valinor
+```
+
+### Client Configuration Pattern (Ubuntu)
+```bash
+#!/bin/bash
+# Client Configuration Example
+
+# Configure network interface
+auto eth0
+iface eth0 inet static
+    address [IP_ADDRESS]
+    netmask [NETMASK]
+    gateway [GATEWAY]
+
+# Apply configuration
+ifconfig eth0 [IP_ADDRESS] netmask [NETMASK]
+route add default gw [GATEWAY]
+
+# Set DNS (optional)
+echo "nameserver 192.168.122.1" > /etc/resolv.conf
+```
+
+### Tampilan tabel CIDR
+
+![Grafik CIDR](Assets/Grafik_CIDR.png)
+
+### CIDR Subnet Aggregation Table
+
+#### Level I - Base Subnets (B-Level)
+| Subnet | Network | Netmask | Range | Usage |
+|--------|---------|---------|-------|-------|
+| B1 | 10.76.0.0 | /22 | 10.76.0.1 - 10.76.3.254 | Aggregasi A1 (Beacon+Silmarils) |
+| B2 | 10.76.5.0 | /24 | 10.76.5.1 - 10.76.5.254 | Aggregasi A2 (Erebor) |
+| B3 | 10.76.14.0 | /24 | 10.76.14.1 - 10.76.14.254 | Aggregasi A14 (Mordor-Erain) |
+| B4 | 10.76.8.0 | /22 | 10.76.8.1 - 10.76.11.254 | Aggregasi A10 (Arthendain+Lindon) |
+| B5 | 10.76.4.0 | /22 | 10.76.4.1 - 10.76.7.254 | Aggregasi A3, A8, A9 |
+| B6 | 10.76.15.0 | /25 | 10.76.15.1 - 10.76.15.126 | Aggregasi A11, A12, A19, A20 |
+| B7 | 10.76.12.0 | /23 | 10.76.12.1 - 10.76.13.254 | Aggregasi A21 (Anarion) |
+| B8 | 10.76.15.128 | /26 | 10.76.15.129 - 10.76.15.190 | Aggregasi P2P links |
+
+#### Level II - Second Aggregation (C-Level)
+| Subnet | Network | Netmask | Merged From |
+|--------|---------|---------|-------------|
+| C1 | 10.76.8.0 | /22 | B4 |
+| C2 | 10.76.0.0 | /22 | B1 |
+| C3 | 10.76.15.0 | /25 | B6 |
+
+#### Level III - Higher Aggregation (D, E, F, G-Level)
+| Subnet | Network | Netmask | Merged From |
+|--------|---------|---------|-------------|
+| D1 | 10.76.0.0 | /21 | C2, B5, B2 |
+| E1 | 10.76.0.0 | /20 | Final aggregation |
+| E2 | 10.76.4.0 | /22 | B5 |
+| E3 | 10.76.12.0 | /23 | B7 |
+| F1 | 10.76.0.0 | /20 | E1 |
+| G1 | 10.76.0.0 | /20 | F1 (Root) |
+
+### Client IP Assignments
+
+#### Area Amansul-Eregion
+- **Beacon**: 10.76.0.2/22 → Gateway: 10.76.0.1
+- **Silmarils**: 10.76.0.3/22 → Gateway: 10.76.0.1
+- **Mirkwood**: 10.76.0.2/25 → Gateway: 10.76.0.1 (Eregion)
+- **Mirdain**: 10.76.0.3/25 → Gateway: 10.76.0.1 (Eregion)
+- **Edhil**: 10.76.0.4/25 → Gateway: 10.76.0.1 (Eregion)
+- **Gwaith**: 10.76.0.5/25 → Gateway: 10.76.0.1 (Eregion)
+- **Elrond**: 10.76.0.6/25 → Gateway: 10.76.0.1 (Eregion)
+
+#### Area Numenor-Gudur
+- **Palantir**: 10.76.15.66/26 → Gateway: 10.76.15.65 (Numenor)
+- **Khazad**: 10.76.15.67/26 → Gateway: 10.76.15.65 (Numenor)
+- **Thranduil**: 10.76.15.68/26 → Gateway: 10.76.15.65 (Numenor)
+- **IronCrown**: 10.76.15.2/26 → Gateway: 10.76.15.1 (Gudur)
+- **Shadow**: 10.76.15.3/26 → Gateway: 10.76.15.1 (Gudur)
+
+#### Area Ereinion
+- **Imrahil**: 10.76.15.162/28 → Gateway: 10.76.15.161
+- **Gothmog**: 10.76.15.163/28 → Gateway: 10.76.15.161
+- **Morgul**: 10.76.15.164/28 → Gateway: 10.76.15.161
+- **Doriath**: 10.76.15.129/27 → Gateway: 10.76.15.128
+- **Hobbiton**: 10.76.15.130/27 → Gateway: 10.76.15.128
+
+#### Area Minastir-Amroth-Morgoth
+- **Erebor**: 10.76.5.2/24 → Gateway: 10.76.5.1 (Minastir)
+- **Erendis**: 10.76.7.2/26 → Gateway: 10.76.7.1 (Amroth)
+- **Balrog**: 10.76.4.2/23 → Gateway: 10.76.4.1 (Morgoth)
+- **Grond**: 10.76.4.3/23 → Gateway: 10.76.4.1 (Morgoth)
+
+#### Area Anor
+- **Melkor**: 10.76.6.2/23 → Gateway: 10.76.6.1
+- **Utumno**: 10.76.6.3/23 → Gateway: 10.76.6.1
+
+#### Area Fornost-Valinor-Valmar
+- **Arthendain**: 10.76.8.2/23 → Gateway: 10.76.8.1 (Fornost)
+- **Lindon**: 10.76.8.3/23 → Gateway: 10.76.8.1 (Fornost)
+- **Anarion**: 10.76.13.2/24 → Gateway: 10.76.13.1 (Valmar)
+- **Arnor**: 10.76.13.3/24 → Gateway: 10.76.13.1 (Valmar)
 
 ---
 
@@ -238,38 +461,6 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
    - Verify gateway IP in client configuration
    - Check router interface is up
    - Verify subnet mask is correct
-
----
-
-## Files Structure
-
-```
-src/
-├── VLSM/              # GNS3 configurations
-│   ├── Amansul.sh
-│   ├── Eregion.sh
-│   ├── Fornost.sh
-│   ├── Minastir.sh
-│   ├── Numenor.sh
-│   ├── Gudur.sh
-│   ├── Mordor.sh
-│   ├── Erain.sh
-│   ├── Anor.sh
-│   ├── Amroth.sh
-│   ├── Morgoth.sh
-│   ├── Ereinion.sh
-│   ├── Valinor.sh
-│   ├── Valmar.sh
-│   └── clients/       # Client configurations
-│       ├── Beacon.sh
-│       ├── Silmarils.sh
-│       ├── Mirdain.sh
-│       └── ...
-└── CIDR/              # Cisco Packet Tracer configurations
-    ├── Amansul.sh
-    ├── Eregion.sh
-    └── ...
-```
 
 ---
 
