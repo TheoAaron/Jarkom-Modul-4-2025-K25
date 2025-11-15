@@ -1,0 +1,33 @@
+! Ereinion Router Configuration (Cisco IOS)
+! Connects Gudur to Switch9 (Imrahil) and Switch10 (Doriath)
+
+enable
+configure terminal
+
+hostname Ereinion
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.186 255.255.255.248
+ no shutdown
+ description Link to Gudur
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.15.161 255.255.255.240
+ no shutdown
+ description Link to Switch9 (Imrahil)
+exit
+
+interface FastEthernet1/0
+ ip address 10.76.15.128 255.255.255.224
+ no shutdown
+ description Link to Switch10 (Doriath)
+exit
+
+! Static routes
+! Default route to Gudur
+ip route 0.0.0.0 0.0.0.0 10.76.15.185
+
+end
+write memory

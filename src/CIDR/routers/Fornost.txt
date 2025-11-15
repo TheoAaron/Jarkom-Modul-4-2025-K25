@@ -1,0 +1,36 @@
+! Fornost Router Configuration (Cisco IOS)
+! Connects Amansul to Valinor and Switch5 (Arthendain)
+
+enable
+configure terminal
+
+hostname Fornost
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.230 255.255.255.252
+ no shutdown
+ description Link to Amansul
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.8.1 255.255.254.0
+ no shutdown
+ description Link to Switch5 (Arthendain)
+exit
+
+interface FastEthernet1/0
+ ip address 10.76.10.1 255.255.254.0
+ no shutdown
+ description Link to Valinor
+exit
+
+! Static routes
+! Default route to Amansul
+ip route 0.0.0.0 0.0.0.0 10.76.15.229
+
+! Route to Valinor side
+ip route 10.76.12.0 255.255.254.0 10.76.10.2
+
+end
+write memory

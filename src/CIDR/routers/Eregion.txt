@@ -1,0 +1,37 @@
+! Eregion Router Configuration (Cisco IOS)
+! Connects Amansul to Numenor and Switch8 (Mirkwood)
+
+enable
+configure terminal
+
+hostname Eregion
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.194 255.255.255.252
+ no shutdown
+ description Link to Amansul
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.15.225 255.255.255.252
+ no shutdown
+ description Link to Numenor
+exit
+
+interface FastEthernet1/0
+ ip address 10.76.0.1 255.255.255.128
+ no shutdown
+ description Link to Switch8 (Mirkwood)
+exit
+
+! Static routes
+! Default route to Amansul
+ip route 0.0.0.0 0.0.0.0 10.76.15.193
+
+! Route to Numenor side networks
+ip route 10.76.14.0 255.255.255.0 10.76.15.226
+ip route 10.76.15.0 255.255.255.128 10.76.15.226
+
+end
+write memory

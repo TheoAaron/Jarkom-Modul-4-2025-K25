@@ -1,0 +1,36 @@
+! Amroth Router Configuration (Cisco IOS)
+! Connects Minastir to Morgoth and Switch2 (Erendis)
+
+enable
+configure terminal
+
+hostname Amroth
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.210 255.255.255.252
+ no shutdown
+ description Link to Minastir
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.15.201 255.255.255.252
+ no shutdown
+ description Link to Morgoth
+exit
+
+interface FastEthernet1/0
+ ip address 10.76.7.1 255.255.255.192
+ no shutdown
+ description Link to Switch2 (Erendis)
+exit
+
+! Static routes
+! Default route to Minastir
+ip route 0.0.0.0 0.0.0.0 10.76.15.209
+
+! Route to Morgoth side
+ip route 10.76.4.0 255.255.254.0 10.76.15.202
+
+end
+write memory

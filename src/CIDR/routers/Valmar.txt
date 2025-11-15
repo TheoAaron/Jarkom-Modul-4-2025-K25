@@ -1,0 +1,27 @@
+! Valmar Router Configuration (Cisco IOS)
+! Connects Valinor to Switch11 (Anarion)
+
+enable
+configure terminal
+
+hostname Valmar
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.12.2 255.255.254.0
+ no shutdown
+ description Link to Valinor
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.13.1 255.255.255.0
+ no shutdown
+ description Link to Switch11 (Anarion)
+exit
+
+! Static routes
+! Default route to Valinor
+ip route 0.0.0.0 0.0.0.0 10.76.12.1
+
+end
+write memory

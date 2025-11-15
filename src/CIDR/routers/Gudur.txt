@@ -1,0 +1,42 @@
+! Gudur Router Configuration (Cisco IOS)
+! Connects Numenor to Mordor, Ereinion, and Switch6 (IronCrown)
+
+enable
+configure terminal
+
+hostname Gudur
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.178 255.255.255.248
+ no shutdown
+ description Link to Numenor
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.15.1 255.255.255.192
+ no shutdown
+ description Link to Switch6 (IronCrown)
+exit
+
+interface FastEthernet1/0
+ ip address 10.76.15.129 255.255.255.192
+ no shutdown
+ description Link to Mordor
+exit
+
+interface FastEthernet1/1
+ ip address 10.76.15.185 255.255.255.248
+ no shutdown
+ description Link to Ereinion
+exit
+
+! Static routes
+! Default route to Numenor
+ip route 0.0.0.0 0.0.0.0 10.76.15.177
+
+! Route to Mordor side
+ip route 10.76.14.0 255.255.255.0 10.76.15.130
+
+end
+write memory

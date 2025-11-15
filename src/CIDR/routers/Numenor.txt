@@ -1,0 +1,37 @@
+! Numenor Router Configuration (Cisco IOS)
+! Connects Eregion to Gudur and Switch7 (Palantir)
+
+enable
+configure terminal
+
+hostname Numenor
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.226 255.255.255.252
+ no shutdown
+ description Link to Eregion
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.15.177 255.255.255.248
+ no shutdown
+ description Link to Gudur
+exit
+
+interface FastEthernet1/0
+ ip address 10.76.15.65 255.255.255.192
+ no shutdown
+ description Link to Switch7 (Palantir)
+exit
+
+! Static routes
+! Default route to Eregion
+ip route 0.0.0.0 0.0.0.0 10.76.15.225
+
+! Route to Gudur side networks
+ip route 10.76.14.0 255.255.255.0 10.76.15.178
+ip route 10.76.15.0 255.255.255.192 10.76.15.178
+
+end
+write memory

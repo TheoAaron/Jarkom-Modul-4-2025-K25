@@ -1,0 +1,27 @@
+! Mordor Router Configuration (Cisco IOS)
+! Connects Gudur to Erain
+
+enable
+configure terminal
+
+hostname Mordor
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.130 255.255.255.192
+ no shutdown
+ description Link to Gudur
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.14.1 255.255.255.0
+ no shutdown
+ description Link to Erain
+exit
+
+! Static routes
+! Default route to Gudur
+ip route 0.0.0.0 0.0.0.0 10.76.15.129
+
+end
+write memory

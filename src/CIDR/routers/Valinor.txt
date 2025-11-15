@@ -1,0 +1,27 @@
+! Valinor Router Configuration (Cisco IOS)
+! Connects Fornost to Valmar
+
+enable
+configure terminal
+
+hostname Valinor
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.10.2 255.255.254.0
+ no shutdown
+ description Link to Fornost
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.12.1 255.255.254.0
+ no shutdown
+ description Link to Valmar
+exit
+
+! Static routes
+! Default route to Fornost
+ip route 0.0.0.0 0.0.0.0 10.76.10.1
+
+end
+write memory

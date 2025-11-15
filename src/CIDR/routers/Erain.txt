@@ -1,0 +1,21 @@
+! Erain Router Configuration (Cisco IOS)
+! End router connected to Mordor
+
+enable
+configure terminal
+
+hostname Erain
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.14.2 255.255.255.0
+ no shutdown
+ description Link to Mordor
+exit
+
+! Static routes
+! Default route to Mordor
+ip route 0.0.0.0 0.0.0.0 10.76.14.1
+
+end
+write memory

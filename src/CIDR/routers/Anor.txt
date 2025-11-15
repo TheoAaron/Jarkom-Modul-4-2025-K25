@@ -1,0 +1,27 @@
+! Anor Router Configuration (Cisco IOS)
+! Connects Minastir to Switch4 (Melkor)
+
+enable
+configure terminal
+
+hostname Anor
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.206 255.255.255.252
+ no shutdown
+ description Link to Minastir
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.6.1 255.255.254.0
+ no shutdown
+ description Link to Switch4 (Melkor)
+exit
+
+! Static routes
+! Default route to Minastir
+ip route 0.0.0.0 0.0.0.0 10.76.15.205
+
+end
+write memory

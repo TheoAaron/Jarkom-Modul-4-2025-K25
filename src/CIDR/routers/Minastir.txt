@@ -1,0 +1,42 @@
+! Minastir Router Configuration (Cisco IOS)
+! Connects Amansul to Amroth, Anor, and Erebor
+
+enable
+configure terminal
+
+hostname Minastir
+
+! Configure interfaces
+interface FastEthernet0/0
+ ip address 10.76.15.214 255.255.255.252
+ no shutdown
+ description Link to Amansul
+exit
+
+interface FastEthernet0/1
+ ip address 10.76.15.209 255.255.255.252
+ no shutdown
+ description Link to Amroth
+exit
+
+interface FastEthernet1/0
+ ip address 10.76.15.205 255.255.255.252
+ no shutdown
+ description Link to Anor
+exit
+
+interface FastEthernet1/1
+ ip address 10.76.5.1 255.255.255.0
+ no shutdown
+ description Link to Erebor
+exit
+
+! Static routes
+! Default route to Amansul
+ip route 0.0.0.0 0.0.0.0 10.76.15.213
+
+! Route to Amroth side
+ip route 10.76.4.0 255.255.252.0 10.76.15.210
+
+end
+write memory
