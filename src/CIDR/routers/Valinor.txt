@@ -1,27 +1,25 @@
-! Valinor Router Configuration (Cisco IOS)
+! Router Valinor Configuration - CIDR (Cisco IOS)
 ! Connects Fornost to Valmar
 
-enable
-configure terminal
+ip routing
 
-hostname Valinor
-
-! Configure interfaces
 interface FastEthernet0/0
- ip address 10.76.10.2 255.255.254.0
+ description Connection to Switch13/Fornost (A12)
+ ip address 10.76.15.190 255.255.255.252
  no shutdown
- description Link to Fornost
-exit
 
 interface FastEthernet0/1
- ip address 10.76.12.1 255.255.254.0
+ description Connection to Valmar (subnet between Valinor-Valmar)
+ ip address 10.76.15.185 255.255.255.252
  no shutdown
- description Link to Valmar
-exit
 
-! Static routes
+! Routes to Valmar branch
+ip route 10.76.12.0 255.255.254.0 10.76.15.186
+ip route 10.76.15.64 255.255.255.192 10.76.15.186
+ip route 10.76.15.128 255.255.255.224 10.76.15.186
+
 ! Default route to Fornost
-ip route 0.0.0.0 0.0.0.0 10.76.10.1
+ip route 0.0.0.0 0.0.0.0 10.76.15.189
 
 end
 write memory

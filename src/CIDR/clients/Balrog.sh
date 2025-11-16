@@ -1,19 +1,18 @@
 #!/bin/bash
-# Balrog Client Configuration (Ubuntu)
-# Connected to Switch3 via Morgoth
-# Subnet A8: 10.76.4.0/23
+# Client Balrog Configuration - CIDR (Ubuntu)
+# Subnet A9: 10.76.10.0/23
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.4.2
-    netmask 255.255.254.0
-    gateway 10.76.4.1
+	address 10.76.10.2
+	netmask 255.255.254.0
+	gateway 10.76.10.1
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.4.2 netmask 255.255.254.0
-route add default gw 10.76.4.1
-
+ip addr add 10.76.10.2/23 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.10.1 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Balrog client configured successfully"
-echo "IP: 10.76.4.2/23"
-echo "Gateway: 10.76.4.1 (Morgoth)"
+echo "Balrog CIDR configured - IP: 10.76.10.2/23, Gateway: 10.76.10.1"

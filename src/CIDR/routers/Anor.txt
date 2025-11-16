@@ -1,27 +1,20 @@
-! Anor Router Configuration (Cisco IOS)
-! Connects Minastir to Switch4 (Melkor)
+! Router Anor Configuration - CIDR (Cisco IOS)
+! Connects Minastir to Switch3 (Beacon/Silmarils)
 
-enable
-configure terminal
+ip routing
 
-hostname Anor
-
-! Configure interfaces
 interface FastEthernet0/0
- ip address 10.76.15.206 255.255.255.252
+ description Connection to Minastir (A20)
+ ip address 10.76.15.222 255.255.255.252
  no shutdown
- description Link to Minastir
-exit
 
 interface FastEthernet0/1
- ip address 10.76.6.1 255.255.254.0
+ description Connection to Switch3 - Beacon/Silmarils (A18)
+ ip address 10.76.4.1 255.255.252.0
  no shutdown
- description Link to Switch4 (Melkor)
-exit
 
-! Static routes
 ! Default route to Minastir
-ip route 0.0.0.0 0.0.0.0 10.76.15.205
+ip route 0.0.0.0 0.0.0.0 10.76.15.221
 
 end
 write memory

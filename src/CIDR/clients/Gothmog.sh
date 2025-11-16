@@ -1,19 +1,18 @@
 #!/bin/bash
-# Gothmog Client Configuration (Ubuntu)
-# Connected to Switch9 via Ereinion
-# Subnet A19: 10.76.15.160/28
+# Client Gothmog Configuration - CIDR (Ubuntu)
+# Subnet A9: 10.76.10.0/23
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.15.163
-    netmask 255.255.255.240
-    gateway 10.76.15.161
+	address 10.76.10.3
+	netmask 255.255.254.0
+	gateway 10.76.10.1
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.15.163 netmask 255.255.255.240
-route add default gw 10.76.15.161
-
+ip addr add 10.76.10.3/23 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.10.1 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Gothmog client configured successfully"
-echo "IP: 10.76.15.163/28"
-echo "Gateway: 10.76.15.161 (Ereinion)"
+echo "Gothmog CIDR configured - IP: 10.76.10.3/23, Gateway: 10.76.10.1"

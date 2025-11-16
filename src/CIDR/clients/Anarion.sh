@@ -1,19 +1,18 @@
 #!/bin/bash
-# Anarion Client Configuration (Ubuntu)
-# Connected to Switch11 via Valmar
-# Subnet A21: 10.76.13.0/24
+# Client Anarion Configuration - CIDR (Ubuntu)
+# Subnet A21: 10.76.12.0/23
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.13.2
-    netmask 255.255.255.0
-    gateway 10.76.13.1
+	address 10.76.12.3
+	netmask 255.255.254.0
+	gateway 10.76.12.1
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.13.2 netmask 255.255.255.0
-route add default gw 10.76.13.1
-
+ip addr add 10.76.12.3/23 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.12.1 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Anarion client configured successfully"
-echo "IP: 10.76.13.2/24"
-echo "Gateway: 10.76.13.1 (Valmar)"
+echo "Anarion CIDR configured - IP: 10.76.12.3/23, Gateway: 10.76.12.1"

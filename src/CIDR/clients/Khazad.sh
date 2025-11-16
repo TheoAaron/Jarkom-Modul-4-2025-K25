@@ -1,19 +1,18 @@
 #!/bin/bash
-# Khazad Client Configuration (Ubuntu)
-# Connected to Switch7 via Numenor
-# Subnet A12: 10.76.15.64/26
+# Client Khazad Configuration - CIDR (Ubuntu)
+# Subnet A10: 10.76.8.0/23
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.15.67
-    netmask 255.255.255.192
-    gateway 10.76.15.65
+	address 10.76.8.3
+	netmask 255.255.254.0
+	gateway 10.76.8.1
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.15.67 netmask 255.255.255.192
-route add default gw 10.76.15.65
-
+ip addr add 10.76.8.3/23 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.8.1 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Khazad client configured successfully"
-echo "IP: 10.76.15.67/26"
-echo "Gateway: 10.76.15.65 (Numenor)"
+echo "Khazad CIDR configured - IP: 10.76.8.3/23, Gateway: 10.76.8.1"

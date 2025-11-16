@@ -1,27 +1,30 @@
-! Valmar Router Configuration (Cisco IOS)
-! Connects Valinor to Switch11 (Anarion)
+! Router Valmar Configuration - CIDR (Cisco IOS)
+! Endpoint router serving Switch11 and Switch12
 
-enable
-configure terminal
+ip routing
 
-hostname Valmar
-
-! Configure interfaces
 interface FastEthernet0/0
- ip address 10.76.12.2 255.255.254.0
+ description Connection to Valinor
+ ip address 10.76.15.186 255.255.255.252
  no shutdown
- description Link to Valinor
-exit
 
 interface FastEthernet0/1
- ip address 10.76.13.1 255.255.255.0
+ description Connection to Switch12 - Shadow/Anarion/Lindon (A21)
+ ip address 10.76.12.1 255.255.254.0
  no shutdown
- description Link to Switch11 (Anarion)
-exit
 
-! Static routes
+interface FastEthernet1/0
+ description Connection to Switch12 - Doriath/Arnor (A22)
+ ip address 10.76.15.129 255.255.255.224
+ no shutdown
+
+interface FastEthernet1/1
+ description Connection to Switch11 - Imrahil/Gwaith/Utumno (A23)
+ ip address 10.76.15.65 255.255.255.192
+ no shutdown
+
 ! Default route to Valinor
-ip route 0.0.0.0 0.0.0.0 10.76.12.1
+ip route 0.0.0.0 0.0.0.0 10.76.15.185
 
 end
 write memory

@@ -1,19 +1,18 @@
 #!/bin/bash
-# Morgul Client Configuration (Ubuntu)
-# Connected to Switch9 via Ereinion
-# Subnet A19: 10.76.15.160/28
+# Client Morgul Configuration - CIDR (Ubuntu)
+# Subnet A2: 10.76.14.0/25
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.15.164
-    netmask 255.255.255.240
-    gateway 10.76.15.161
+	address 10.76.14.3
+	netmask 255.255.255.128
+	gateway 10.76.14.1
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.15.164 netmask 255.255.255.240
-route add default gw 10.76.15.161
-
+ip addr add 10.76.14.3/25 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.14.1 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Morgul client configured successfully"
-echo "IP: 10.76.15.164/28"
-echo "Gateway: 10.76.15.161 (Ereinion)"
+echo "Morgul CIDR configured - IP: 10.76.14.3/25, Gateway: 10.76.14.1"

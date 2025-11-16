@@ -1,22 +1,18 @@
 #!/bin/bash
-# Beacon Client Configuration (Ubuntu)
-# Connected to Switch1 via Amansul
-# Subnet A1: 10.76.0.0/22
+# Client Beacon Configuration - CIDR (Ubuntu)
+# Subnet A18: 10.76.4.0/22
 
-# Configure network interface
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.0.2
-    netmask 255.255.252.0
-    gateway 10.76.0.1
+	address 10.76.4.2
+	netmask 255.255.252.0
+	gateway 10.76.4.1
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-# Apply configuration
-ifconfig eth0 10.76.0.2 netmask 255.255.252.0
-route add default gw 10.76.0.1
-
-# DNS Configuration (optional)
+ip addr add 10.76.4.2/22 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.4.1 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Beacon client configured successfully"
-echo "IP: 10.76.0.2/22"
-echo "Gateway: 10.76.0.1 (Switch1)"
+echo "Beacon CIDR configured - IP: 10.76.4.2/22, Gateway: 10.76.4.1"

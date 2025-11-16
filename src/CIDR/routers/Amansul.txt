@@ -1,42 +1,47 @@
-! Amansul Router Configuration (Cisco IOS)
-! Central router connecting to Eregion, Minastir, and Fornost
+! Router Amansul Configuration - CIDR (Cisco IOS)
+! Central hub router connecting to Eregion, Minastir, and Fornost
 
-enable
-configure terminal
-
-! Set hostname
-hostname Amansul
+! Enable IP routing
+ip routing
 
 ! Configure interfaces
 interface FastEthernet0/0
+ description Connection to Eregion (A1)
  ip address 10.76.15.193 255.255.255.252
  no shutdown
- description Link to Eregion
-exit
 
 interface FastEthernet0/1
+ description Connection to Minastir (A13)
  ip address 10.76.15.213 255.255.255.252
  no shutdown
- description Link to Minastir
-exit
 
 interface FastEthernet1/0
+ description Connection to Fornost (A19)
  ip address 10.76.15.229 255.255.255.252
  no shutdown
- description Link to Fornost
-exit
 
-! Static routes using CIDR aggregation
-! Route to Eregion side networks (B1, B3, B6, B8, C3, E2)
-ip route 10.76.0.0 255.255.240.0 10.76.15.194
+! Configure static routes
+! Routes to Eregion branch (via Eregion)
+ip route 10.76.14.0 255.255.254.0 10.76.15.194
+ip route 10.76.0.0 255.255.252.0 10.76.15.194
+ip route 10.76.8.0 255.255.248.0 10.76.15.194
+ip route 10.76.15.196 255.255.255.252 10.76.15.194
+ip route 10.76.15.200 255.255.255.252 10.76.15.194
+ip route 10.76.15.204 255.255.255.252 10.76.15.194
+ip route 10.76.15.160 255.255.255.240 10.76.15.194
+ip route 10.76.15.208 255.255.255.252 10.76.15.194
 
-! Route to Minastir side networks (B5, B7, E3)
+! Routes to Minastir branch (via Minastir)
 ip route 10.76.4.0 255.255.252.0 10.76.15.214
-ip route 10.76.12.0 255.255.254.0 10.76.15.214
+ip route 10.76.15.0 255.255.255.0 10.76.15.214
+ip route 10.76.15.216 255.255.255.252 10.76.15.214
+ip route 10.76.15.220 255.255.255.252 10.76.15.214
+ip route 10.76.15.224 255.255.255.252 10.76.15.214
 
-! Route to Fornost side networks (B4, C1)
-ip route 10.76.8.0 255.255.252.0 10.76.15.230
+! Routes to Fornost branch (via Fornost)
+ip route 10.76.12.0 255.255.254.0 10.76.15.230
+ip route 10.76.15.64 255.255.255.192 10.76.15.230
+ip route 10.76.15.128 255.255.255.224 10.76.15.230
 
-! Save configuration
 end
 write memory

@@ -1,5 +1,19 @@
 #!/bin/bash
-# Arnor - Subnet A20: 10.76.18.0/27
-ip addr add 10.76.18.3/27 dev eth0
+# Client Arnor Configuration - VLSM (Ubuntu)
+# Connected to Switch12 via Valmar
+# Subnet A22: 10.76.15.128/27
+
+# Network configuration in /etc/network/interfaces
+auto eth0
+iface eth0 inet static
+	address 10.76.15.131
+	netmask 255.255.255.224
+	gateway 10.76.15.129
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
+
+ip addr add 10.76.15.131/27 dev eth0
 ip link set eth0 up
-ip route add default via 10.76.18.1
+ip route add default via 10.76.15.129 dev eth0
+echo "nameserver 192.168.122.1" > /etc/resolv.conf
+
+echo "Arnor configured successfully - IP: 10.76.15.131/27, Gateway: 10.76.15.129"

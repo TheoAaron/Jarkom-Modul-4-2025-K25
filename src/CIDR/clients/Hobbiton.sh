@@ -1,19 +1,18 @@
 #!/bin/bash
-# Hobbiton Client Configuration (Ubuntu)
-# Connected to Switch10 via Ereinion
-# Subnet A20: 10.76.15.128/27
+# Client Hobbiton Configuration - CIDR (Ubuntu)
+# Subnet A7: 10.76.15.160/28
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.15.130
-    netmask 255.255.255.224
-    gateway 10.76.15.128
+	address 10.76.15.164
+	netmask 255.255.255.240
+	gateway 10.76.15.161
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.15.130 netmask 255.255.255.224
-route add default gw 10.76.15.128
-
+ip addr add 10.76.15.164/28 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.15.161 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Hobbiton client configured successfully"
-echo "IP: 10.76.15.130/27"
-echo "Gateway: 10.76.15.128 (Ereinion)"
+echo "Hobbiton CIDR configured - IP: 10.76.15.164/28, Gateway: 10.76.15.161"

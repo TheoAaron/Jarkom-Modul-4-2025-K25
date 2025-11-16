@@ -1,36 +1,39 @@
-! Fornost Router Configuration (Cisco IOS)
-! Connects Amansul to Valinor and Switch5 (Arthendain)
+! Router Fornost Configuration - CIDR (Cisco IOS)
+! Connects Amansul to Switch13 (connects to Valinor)
 
-enable
-configure terminal
+ip routing
 
-hostname Fornost
-
-! Configure interfaces
 interface FastEthernet0/0
+ description Connection to Amansul (A19)
  ip address 10.76.15.230 255.255.255.252
  no shutdown
- description Link to Amansul
-exit
 
 interface FastEthernet0/1
- ip address 10.76.8.1 255.255.254.0
+ description Connection to Switch13/Valinor (A12)
+ ip address 10.76.15.189 255.255.255.252
  no shutdown
- description Link to Switch5 (Arthendain)
-exit
 
-interface FastEthernet1/0
- ip address 10.76.10.1 255.255.254.0
- no shutdown
- description Link to Valinor
-exit
+! Routes to Valinor/Valmar branch
+ip route 10.76.12.0 255.255.254.0 10.76.15.190
+ip route 10.76.15.64 255.255.255.192 10.76.15.190
+ip route 10.76.15.128 255.255.255.224 10.76.15.190
 
-! Static routes
-! Default route to Amansul
-ip route 0.0.0.0 0.0.0.0 10.76.15.229
-
-! Route to Valinor side
-ip route 10.76.12.0 255.255.254.0 10.76.10.2
+! Routes via Amansul
+ip route 10.76.0.0 255.255.252.0 10.76.15.229
+ip route 10.76.4.0 255.255.252.0 10.76.15.229
+ip route 10.76.8.0 255.255.248.0 10.76.15.229
+ip route 10.76.14.0 255.255.254.0 10.76.15.229
+ip route 10.76.15.0 255.255.255.0 10.76.15.229
+ip route 10.76.15.160 255.255.255.240 10.76.15.229
+ip route 10.76.15.193 255.255.255.252 10.76.15.229
+ip route 10.76.15.196 255.255.255.252 10.76.15.229
+ip route 10.76.15.200 255.255.255.252 10.76.15.229
+ip route 10.76.15.204 255.255.255.252 10.76.15.229
+ip route 10.76.15.208 255.255.255.252 10.76.15.229
+ip route 10.76.15.213 255.255.255.252 10.76.15.229
+ip route 10.76.15.216 255.255.255.252 10.76.15.229
+ip route 10.76.15.220 255.255.255.252 10.76.15.229
+ip route 10.76.15.224 255.255.255.252 10.76.15.229
 
 end
 write memory

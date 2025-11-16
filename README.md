@@ -168,7 +168,7 @@ ip route 10.76.15.0 255.255.255.192 10.76.15.178    ! To Gudur side
 ! FastEthernet0/0: to Numenor (10.76.15.178/29)
 ! FastEthernet0/1: to Switch6/IronCrown (10.76.15.1/26)
 ! FastEthernet1/0: to Mordor (10.76.15.129/26)
-! FastEthernet1/1: to Ereinion (10.76.15.185/29)
+! FastEthernet1/1: to Switch5 (IronCrown, Grond, Hobbiton)
 
 ! Static Routes:
 ip route 0.0.0.0 0.0.0.0 10.76.15.177               ! Default to Numenor
@@ -194,16 +194,7 @@ ip route 0.0.0.0 0.0.0.0 10.76.15.129               ! Default to Gudur
 ip route 0.0.0.0 0.0.0.0 10.76.14.1                 ! Default to Mordor
 ```
 
-#### 7. **Ereinion**
-```cisco
-! Interfaces:
-! FastEthernet0/0: to Gudur (10.76.15.186/29)
-! FastEthernet0/1: to Switch9/Imrahil (10.76.15.161/28)
-! FastEthernet1/0: to Switch10/Doriath (10.76.15.128/27)
 
-! Static Routes:
-ip route 0.0.0.0 0.0.0.0 10.76.15.185               ! Default to Gudur
-```
 
 #### 8. **Minastir**
 ```cisco
@@ -355,12 +346,19 @@ echo "nameserver 192.168.122.1" > /etc/resolv.conf
 - **IronCrown**: 10.76.15.2/26 → Gateway: 10.76.15.1 (Gudur)
 - **Shadow**: 10.76.15.3/26 → Gateway: 10.76.15.1 (Gudur)
 
-#### Area Ereinion
-- **Imrahil**: 10.76.15.162/28 → Gateway: 10.76.15.161
-- **Gothmog**: 10.76.15.163/28 → Gateway: 10.76.15.161
-- **Morgul**: 10.76.15.164/28 → Gateway: 10.76.15.161
-- **Doriath**: 10.76.15.129/27 → Gateway: 10.76.15.128
-- **Hobbiton**: 10.76.15.130/27 → Gateway: 10.76.15.128
+#### Area Gudur
+- **IronCrown**: 10.76.15.161/28 → Gateway: 10.76.15.160 (Gudur)
+- **Grond**: 10.76.15.162/28 → Gateway: 10.76.15.160 (Gudur)
+- **Hobbiton**: 10.76.15.163/28 → Gateway: 10.76.15.160 (Gudur)
+- **Palantir**: 10.76.14.129/25 → Gateway: 10.76.14.128 (Gudur)
+- **Edhil**: 10.76.14.130/25 → Gateway: 10.76.14.128 (Gudur)
+
+#### Area Valmar
+- **Imrahil**: 10.76.15.66/26 → Gateway: 10.76.15.65 (Valmar)
+- **Gwaith**: 10.76.15.67/26 → Gateway: 10.76.15.65 (Valmar)
+- **Utumno**: 10.76.15.68/26 → Gateway: 10.76.15.65 (Valmar)
+- **Doriath**: 10.76.15.129/27 → Gateway: 10.76.15.128 (Valmar)
+- **Arnor**: 10.76.15.130/27 → Gateway: 10.76.15.128 (Valmar)
 
 #### Area Minastir-Amroth-Morgoth
 - **Erebor**: 10.76.5.2/24 → Gateway: 10.76.5.1 (Minastir)

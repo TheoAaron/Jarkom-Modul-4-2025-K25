@@ -1,19 +1,18 @@
 #!/bin/bash
-# Imrahil Client Configuration (Ubuntu)
-# Connected to Switch9 via Ereinion
-# Subnet A19: 10.76.15.160/28
+# Client Imrahil Configuration - CIDR (Ubuntu)
+# Subnet A23: 10.76.15.64/26
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.15.162
-    netmask 255.255.255.240
-    gateway 10.76.15.161
+	address 10.76.15.66
+	netmask 255.255.255.192
+	gateway 10.76.15.65
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.15.162 netmask 255.255.255.240
-route add default gw 10.76.15.161
-
+ip addr add 10.76.15.66/26 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.15.65 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Imrahil client configured successfully"
-echo "IP: 10.76.15.162/28"
-echo "Gateway: 10.76.15.161 (Ereinion)"
+echo "Imrahil CIDR configured - IP: 10.76.15.66/26, Gateway: 10.76.15.65"

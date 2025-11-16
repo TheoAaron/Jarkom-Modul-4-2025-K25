@@ -1,21 +1,25 @@
-! Erain Router Configuration (Cisco IOS)
-! End router connected to Mordor
+! Router Erain Configuration - CIDR (Cisco IOS)
+! Connects to Switch9 (Balrog/Gothmog/Thranduil) and Switch2 (Melkor/Khazad)
 
-enable
-configure terminal
+ip routing
 
-hostname Erain
-
-! Configure interfaces
 interface FastEthernet0/0
- ip address 10.76.14.2 255.255.255.0
+ description Connection to Mordor (A6)
+ ip address 10.76.15.210 255.255.255.252
  no shutdown
- description Link to Mordor
-exit
 
-! Static routes
+interface FastEthernet0/1
+ description Connection to Switch9 - Balrog/Gothmog/Thranduil (A9)
+ ip address 10.76.10.1 255.255.254.0
+ no shutdown
+
+interface FastEthernet1/0
+ description Connection to Switch2 - Melkor/Khazad (A10)
+ ip address 10.76.8.1 255.255.254.0
+ no shutdown
+
 ! Default route to Mordor
-ip route 0.0.0.0 0.0.0.0 10.76.14.1
+ip route 0.0.0.0 0.0.0.0 10.76.15.209
 
 end
 write memory

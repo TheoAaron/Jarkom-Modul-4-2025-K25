@@ -1,37 +1,49 @@
-! Numenor Router Configuration (Cisco IOS)
-! Connects Eregion to Gudur and Switch7 (Palantir)
+! Router Numenor Configuration - CIDR (Cisco IOS)
+! Critical junction connecting Gudur, Mordor, and Switch7
 
-enable
-configure terminal
+ip routing
 
-hostname Numenor
-
-! Configure interfaces
 interface FastEthernet0/0
- ip address 10.76.15.226 255.255.255.252
+ description Connection to Eregion (A3)
+ ip address 10.76.15.198 255.255.255.252
  no shutdown
- description Link to Eregion
-exit
 
 interface FastEthernet0/1
- ip address 10.76.15.177 255.255.255.248
+ description Connection to Switch7 - Mirdain/Arthedain (A11)
+ ip address 10.76.0.1 255.255.252.0
  no shutdown
- description Link to Gudur
-exit
 
 interface FastEthernet1/0
- ip address 10.76.15.65 255.255.255.192
+ description Connection to Gudur (A4)
+ ip address 10.76.15.201 255.255.255.252
  no shutdown
- description Link to Switch7 (Palantir)
-exit
 
-! Static routes
-! Default route to Eregion
-ip route 0.0.0.0 0.0.0.0 10.76.15.225
+interface FastEthernet1/1
+ description Connection to Mordor (A5)
+ ip address 10.76.15.205 255.255.255.252
+ no shutdown
 
-! Route to Gudur side networks
-ip route 10.76.14.0 255.255.255.0 10.76.15.178
-ip route 10.76.15.0 255.255.255.192 10.76.15.178
+! Routes to Gudur branch
+ip route 10.76.14.128 255.255.255.128 10.76.15.202
+ip route 10.76.15.160 255.255.255.240 10.76.15.202
+
+! Routes to Mordor/Erain branch
+ip route 10.76.8.0 255.255.248.0 10.76.15.206
+ip route 10.76.15.208 255.255.255.252 10.76.15.206
+
+! Routes via Eregion to Amansul and other branches
+ip route 10.76.4.0 255.255.252.0 10.76.15.197
+ip route 10.76.12.0 255.255.254.0 10.76.15.197
+ip route 10.76.14.0 255.255.255.128 10.76.15.197
+ip route 10.76.15.0 255.255.255.0 10.76.15.197
+ip route 10.76.15.64 255.255.255.192 10.76.15.197
+ip route 10.76.15.128 255.255.255.224 10.76.15.197
+ip route 10.76.15.193 255.255.255.252 10.76.15.197
+ip route 10.76.15.213 255.255.255.252 10.76.15.197
+ip route 10.76.15.216 255.255.255.252 10.76.15.197
+ip route 10.76.15.220 255.255.255.252 10.76.15.197
+ip route 10.76.15.224 255.255.255.252 10.76.15.197
+ip route 10.76.15.229 255.255.255.252 10.76.15.197
 
 end
 write memory

@@ -1,27 +1,39 @@
-! Mordor Router Configuration (Cisco IOS)
-! Connects Gudur to Erain
+! Router Mordor Configuration - CIDR (Cisco IOS)
+! Connects Numenor to Erain
 
-enable
-configure terminal
+ip routing
 
-hostname Mordor
-
-! Configure interfaces
 interface FastEthernet0/0
- ip address 10.76.15.130 255.255.255.192
+ description Connection to Numenor (A5)
+ ip address 10.76.15.206 255.255.255.252
  no shutdown
- description Link to Gudur
-exit
 
 interface FastEthernet0/1
- ip address 10.76.14.1 255.255.255.0
+ description Connection to Erain (A6)
+ ip address 10.76.15.209 255.255.255.252
  no shutdown
- description Link to Erain
-exit
 
-! Static routes
-! Default route to Gudur
-ip route 0.0.0.0 0.0.0.0 10.76.15.129
+! Routes to Erain branch
+ip route 10.76.8.0 255.255.248.0 10.76.15.210
+
+! Routes via Numenor
+ip route 10.76.0.0 255.255.252.0 10.76.15.205
+ip route 10.76.4.0 255.255.252.0 10.76.15.205
+ip route 10.76.12.0 255.255.254.0 10.76.15.205
+ip route 10.76.14.0 255.255.255.128 10.76.15.205
+ip route 10.76.14.128 255.255.255.128 10.76.15.205
+ip route 10.76.15.0 255.255.255.0 10.76.15.205
+ip route 10.76.15.64 255.255.255.192 10.76.15.205
+ip route 10.76.15.128 255.255.255.224 10.76.15.205
+ip route 10.76.15.160 255.255.255.240 10.76.15.205
+ip route 10.76.15.193 255.255.255.252 10.76.15.205
+ip route 10.76.15.197 255.255.255.252 10.76.15.205
+ip route 10.76.15.201 255.255.255.252 10.76.15.205
+ip route 10.76.15.213 255.255.255.252 10.76.15.205
+ip route 10.76.15.216 255.255.255.252 10.76.15.205
+ip route 10.76.15.220 255.255.255.252 10.76.15.205
+ip route 10.76.15.224 255.255.255.252 10.76.15.205
+ip route 10.76.15.229 255.255.255.252 10.76.15.205
 
 end
 write memory

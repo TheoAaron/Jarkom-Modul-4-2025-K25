@@ -1,19 +1,18 @@
 #!/bin/bash
-# IronCrown Client Configuration (Ubuntu)
-# Connected to Switch6 via Gudur
-# Subnet A11: 10.76.15.0/26
+# Client IronCrown Configuration - CIDR (Ubuntu)
+# Subnet A7: 10.76.15.160/28
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.15.2
-    netmask 255.255.255.192
-    gateway 10.76.15.1
+	address 10.76.15.162
+	netmask 255.255.255.240
+	gateway 10.76.15.161
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.15.2 netmask 255.255.255.192
-route add default gw 10.76.15.1
-
+ip addr add 10.76.15.162/28 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.15.161 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "IronCrown client configured successfully"
-echo "IP: 10.76.15.2/26"
-echo "Gateway: 10.76.15.1 (Gudur)"
+echo "IronCrown CIDR configured - IP: 10.76.15.162/28, Gateway: 10.76.15.161"

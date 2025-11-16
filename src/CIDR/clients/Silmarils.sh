@@ -1,19 +1,18 @@
 #!/bin/bash
-# Silmarils Client Configuration (Ubuntu)
-# Connected to Switch1 via Amansul
-# Subnet A1: 10.76.0.0/22
+# Client Silmarils Configuration - CIDR (Ubuntu)
+# Subnet A18: 10.76.4.0/22
 
+# Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-    address 10.76.0.3
-    netmask 255.255.252.0
-    gateway 10.76.0.1
+	address 10.76.4.3
+	netmask 255.255.252.0
+	gateway 10.76.4.1
+	up echo nameserver 192.168.122.1 > /etc/resolv.conf
 
-ifconfig eth0 10.76.0.3 netmask 255.255.252.0
-route add default gw 10.76.0.1
-
+ip addr add 10.76.4.3/22 dev eth0
+ip link set eth0 up
+ip route add default via 10.76.4.1 dev eth0
 echo "nameserver 192.168.122.1" > /etc/resolv.conf
 
-echo "Silmarils client configured successfully"
-echo "IP: 10.76.0.3/22"
-echo "Gateway: 10.76.0.1 (Switch1)"
+echo "Silmarils CIDR configured - IP: 10.76.4.3/22, Gateway: 10.76.4.1"
