@@ -9,7 +9,7 @@
 # Network configuration in /etc/network/interfaces
 auto eth0
 iface eth0 inet static
-	address 10.76.15.186
+	address 10.76.15.189
 	netmask 255.255.255.252
 
 auto eth1
@@ -31,8 +31,8 @@ iface eth3 inet static
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
 # Configure interfaces
-# Interface to Switch13/Valinor (A20: 10.76.15.184/29)
-ip addr add 10.76.15.187/29 dev eth0
+# Interface to Valinor (between Valinor-Valmar)
+ip addr add 10.76.15.189/30 dev eth0
 ip link set eth0 up
 
 # Interface to Switch12 - Shadow, Anarion, Lindon (A21: 10.76.12.0/23)
@@ -49,6 +49,6 @@ ip link set eth3 up
 
 # Static routes
 # Default route to Valinor
-ip route add default via 10.76.15.186 dev eth0
+ip route add default via 10.76.15.190 dev eth0
 
 echo "Valmar configured successfully"

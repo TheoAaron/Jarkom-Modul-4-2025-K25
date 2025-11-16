@@ -10,18 +10,18 @@ iface eth0 inet static
 
 auto eth1
 iface eth1 inet static
-	address 10.76.0.1
-	netmask 255.255.252.0
+	address 10.76.15.201
+	netmask 255.255.255.252
 
 auto eth2
 iface eth2 inet static
-	address 10.76.15.201
+	address 10.76.15.205
 	netmask 255.255.255.252
 
 auto eth3
 iface eth3 inet static
-	address 10.76.15.205
-	netmask 255.255.255.252
+	address 10.76.0.1
+	netmask 255.255.252.0
 
 # Enable IP forwarding
 echo 1 > /proc/sys/net/ipv4/ip_forward
